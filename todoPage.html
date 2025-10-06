@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteSync - To do Page</title>
+
+  <link rel="stylesheet" href="styles/todoPage/main.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <button class="logout">⏎</button>
+    <div class="title">NoteSync</div>
+  </header>
+
+  <main>
+    <div class="content">
+      <div class="title-left">A fazer</div>
+      <!-- As tarefas serão carregadas dinamicamente aqui -->
+    </div>
+  </main>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="todoPage.html" class="nav-link">📦 A fazer</a>
+      <a href="createPage.html" class="nav-center">➕ Criar</a>
+      <a href="donePage.html" class="nav-link">✔️ Feito</a>
+    </div>
+  </nav>
+
+      <script src="js/config.js"></script>
+      <script src="js/auth.js"></script>
+      <script src="js/tasks.js"></script>
+  <script>
+    // Função para inicializar a página
+    async function initializePage() {
+      console.log('=== INICIALIZANDO TODO PAGE ===');
+      
+      try {
+        // Verificar se auth está disponível
+        if (typeof auth === 'undefined') {
+          console.error('Objeto auth não está disponível');
+          throw new Error('Sistema de autenticação não carregado');
+        }
+        
+        // Verificar se tasks está disponível
+        if (typeof tasks === 'undefined') {
+          console.error('Objeto tasks não está disponível');
+          throw new Error('Sistema de tarefas não carregado');
+        }
+        
+        // Verificar se usuário está logado
+        if (!auth.isLoggedIn()) {
+          console.log('Usuário não logado, redirecionando...');
+          window.location.href = 'loginPage.html';
+          return;
+        }
+
+        console.log('Usuário logado, carregando tarefas...');
+
+        // Carregar tarefas
+        const tasksData = await tasks.getTasks();
+        console.log('Tarefas carregadas:', tasksData);
+        
+        // Renderizar tarefas
+        tasks.renderTasks(tasksData, 'todo');
+        console.log('Tarefas renderizadas');
+        
+        // Verificar se cards foram criados
+        const cards = document.querySelectorAll('.task-card');
+        console.log('Cards encontrados:', cards.length);
+        
+      } catch (error) {
+        console.error('Erro ao inicializar página:', error);
+        alert('Erro ao carregar tarefas: ' + error.message);
+      }
+    }
+
+    // Função para carregar tarefas diretamente
+    async function loadTasksDirect() {
+      try {
+        console.log('Carregando tarefas diretamente...');
+        
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Usuário não autenticado');
+        }
+        
+        const response = await fetch(buildApiUrl('/api/tasks'), {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao carregar tarefas');
+        }
+        
+        const tasks = await response.json();
+        console.log('Tarefas carregadas:', tasks);
+        
+        // Renderizar tarefas
+        renderTasksDirect(tasks, 'todo');
+        
+      } catch (error) {
+        console.error('Erro ao carregar tarefas:', error);
+        alert('Erro ao carregar tarefas: ' + error.message);
+      }
+    }
+    
+    // Função para renderizar tarefas diretamente
+    function renderTasksDirect(tasks, status = 'todo') {
+      console.log('Renderizando tarefas diretamente:', tasks, 'com status:', status);
+      
+      const taskContainer = document.querySelector('.content');
+      if (!taskContainer) {
+        console.error('Container de tarefas não encontrado');
+        return;
+      }
+      
+      // Limpar tarefas existentes
+      const existingTasks = taskContainer.querySelectorAll('.task-card, .no-tasks-message');
+      existingTasks.forEach(task => task.remove());
+      
+      // Filtrar tarefas por status
+      const filteredTasks = tasks.filter(task => task.status === status);
+      console.log('Tarefas filtradas:', filteredTasks);
+      
+      // Se não há tarefas, mostrar mensagem
+      if (filteredTasks.length === 0) {
+        const noTasksMsg = document.createElement('div');
+        noTasksMsg.className = 'no-tasks-message';
+        noTasksMsg.style.cssText = `
+          text-align: center;
+          color: #a0a0a0;
+          padding: 40px 20px;
+          font-size: 1.1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 12px;
+          margin: 20px 0;
+        `;
+        noTasksMsg.textContent = status === 'todo' ? 'Nenhuma tarefa a fazer' : 'Nenhuma tarefa concluída';
+        taskContainer.appendChild(noTasksMsg);
+        return;
+      }
+      
+      // Renderizar cada tarefa
+      filteredTasks.forEach(task => {
+        const taskCard = createTaskCardDirect(task);
+        taskContainer.appendChild(taskCard);
+      });
+      
+      console.log('✅ Tarefas renderizadas diretamente');
+    }
+    
+    // Função para criar card diretamente
+    function createTaskCardDirect(task) {
+      const taskCard = document.createElement('div');
+      taskCard.className = 'task-card';
+      taskCard.dataset.taskId = task.id;
+      
+      // Header do card
+      const cardHeader = document.createElement('div');
+      cardHeader.className = 'card-header';
+      
+      const statusIndicator = document.createElement('div');
+      statusIndicator.className = `status-indicator ${task.status}`;
+      statusIndicator.textContent = task.status === 'todo' ? '📦 A fazer' : '✅ Feito';
+      
+      const taskDate = document.createElement('div');
+      taskDate.className = 'task-date';
+      taskDate.textContent = new Date(task.createdAt || Date.now()).toLocaleDateString('pt-BR');
+      
+      cardHeader.appendChild(statusIndicator);
+      cardHeader.appendChild(taskDate);
+      
+      // Conteúdo do card
+      const cardContent = document.createElement('div');
+      cardContent.className = 'card-content';
+      
+      const taskTitle = document.createElement('div');
+      taskTitle.className = 'task-title';
+      taskTitle.textContent = task.title;
+      taskTitle.onclick = () => toggleEditModeDirect(taskCard, task.id);
+      
+      const taskInput = document.createElement('input');
+      taskInput.type = 'text';
+      taskInput.value = task.title;
+      taskInput.className = 'task-input hidden';
+      taskInput.style.display = 'none';
+      
+      cardContent.appendChild(taskTitle);
+      cardContent.appendChild(taskInput);
+      
+      // Ações do card
+      const cardActions = document.createElement('div');
+      cardActions.className = 'card-actions';
+      
+      // Botão de editar/salvar
+      const editBtn = document.createElement('button');
+      editBtn.className = 'action-btn edit-btn';
+      editBtn.innerHTML = '✏️';
+      editBtn.title = 'Editar tarefa';
+      editBtn.onclick = () => toggleEditModeDirect(taskCard, task.id);
+      
+      // Botão de mudar status
+      const statusBtn = document.createElement('button');
+      statusBtn.className = 'action-btn status-btn';
+      if (task.status === 'todo') {
+        statusBtn.innerHTML = '✅';
+        statusBtn.title = 'Marcar como feito';
+        statusBtn.onclick = () => changeTaskStatusDirect(task.id, 'done');
+      } else {
+        statusBtn.innerHTML = '📦';
+        statusBtn.title = 'Marcar como a fazer';
+        statusBtn.onclick = () => changeTaskStatusDirect(task.id, 'todo');
+      }
+      
+      // Botão de deletar
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'action-btn delete-btn';
+      deleteBtn.innerHTML = '🗑️';
+      deleteBtn.title = 'Excluir tarefa';
+      deleteBtn.onclick = () => deleteTaskDirect(task.id);
+      
+      cardActions.appendChild(editBtn);
+      cardActions.appendChild(statusBtn);
+      cardActions.appendChild(deleteBtn);
+      
+      // Montar o card
+      taskCard.appendChild(cardHeader);
+      taskCard.appendChild(cardContent);
+      taskCard.appendChild(cardActions);
+      
+      return taskCard;
+    }
+    
+    // Função para mudar status diretamente
+    async function changeTaskStatusDirect(taskId, newStatus) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(buildApiUrl(`/api/tasks/${taskId}`), {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao mudar status');
+        }
+        
+        // Recarregar tarefas
+        loadTasksDirect();
+        
+      } catch (error) {
+        console.error('Erro ao mudar status:', error);
+        alert('Erro ao mudar status: ' + error.message);
+      }
+    }
+    
+    // Função para deletar tarefa diretamente
+    async function deleteTaskDirect(taskId) {
+      if (!confirm('Tem certeza que deseja excluir esta tarefa?')) {
+        return;
+      }
+      
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(buildApiUrl(`/api/tasks/${taskId}`), {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao excluir tarefa');
+        }
+        
+        // Recarregar tarefas
+        loadTasksDirect();
+        
+      } catch (error) {
+        console.error('Erro ao excluir tarefa:', error);
+        alert('Erro ao excluir tarefa: ' + error.message);
+      }
+    }
+    
+    // Função para alternar modo de edição inline
+    function toggleEditModeDirect(taskCard, taskId) {
+      const taskTitle = taskCard.querySelector('.task-title');
+      const taskInput = taskCard.querySelector('.task-input');
+      const editBtn = taskCard.querySelector('.edit-btn');
+      
+      if (taskTitle.style.display !== 'none') {
+        // Entrar no modo de edição
+        taskTitle.style.display = 'none';
+        taskInput.style.display = 'block';
+        taskInput.focus();
+        taskInput.select();
+        editBtn.innerHTML = '💾';
+        editBtn.title = 'Salvar alterações';
+        
+        // Adicionar evento para salvar ao pressionar Enter
+        taskInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            saveTaskEditDirect(taskCard, taskId);
+          }
+        });
+        
+        // Adicionar evento para cancelar ao pressionar Escape
+        taskInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            cancelTaskEditDirect(taskCard);
+          }
+        });
+      } else {
+        // Salvar alterações
+        saveTaskEditDirect(taskCard, taskId);
+      }
+    }
+    
+    // Função para salvar edição da tarefa
+    async function saveTaskEditDirect(taskCard, taskId) {
+      const taskInput = taskCard.querySelector('.task-input');
+      const newTitle = taskInput.value.trim();
+      
+      if (!newTitle) {
+        alert('O título da tarefa não pode estar vazio');
+        return;
+      }
+      
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(buildApiUrl(`/api/tasks/${taskId}`), {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ title: newTitle })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao editar tarefa');
+        }
+        
+        // Atualizar o título exibido
+        const taskTitle = taskCard.querySelector('.task-title');
+        taskTitle.textContent = newTitle;
+        
+        // Voltar ao modo de visualização
+        taskTitle.style.display = 'block';
+        taskInput.style.display = 'none';
+        
+        // Restaurar botão de editar
+        const editBtn = taskCard.querySelector('.edit-btn');
+        editBtn.innerHTML = '✏️';
+        editBtn.title = 'Editar tarefa';
+        
+        console.log('Tarefa editada com sucesso');
+      } catch (error) {
+        console.error('Erro ao editar tarefa:', error);
+        alert('Erro ao editar tarefa: ' + error.message);
+      }
+    }
+    
+    // Função para cancelar edição da tarefa
+    function cancelTaskEditDirect(taskCard) {
+      const taskTitle = taskCard.querySelector('.task-title');
+      const taskInput = taskCard.querySelector('.task-input');
+      const editBtn = taskCard.querySelector('.edit-btn');
+      
+      // Restaurar valor original
+      taskInput.value = taskTitle.textContent;
+      
+      // Voltar ao modo de visualização
+      taskTitle.style.display = 'block';
+      taskInput.style.display = 'none';
+      
+      // Restaurar botão de editar
+      editBtn.innerHTML = '✏️';
+      editBtn.title = 'Editar tarefa';
+    }
+
+    // Aguardar carregamento completo
+    window.addEventListener('load', function() {
+      console.log('Página carregada, carregando tarefas diretamente...');
+      
+      // Verificar se usuário está logado
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log('Usuário não logado, redirecionando...');
+        window.location.href = 'loginPage.html';
+        return;
+      }
+      
+      // Configurar botão de logout
+      const logoutBtn = document.querySelector('.logout');
+      logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'loginPage.html';
+      });
+
+      // Carregar tarefas diretamente
+      loadTasksDirect();
+    });
+  </script>
+</body>
+
+</html>

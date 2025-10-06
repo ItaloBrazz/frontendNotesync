@@ -1,0 +1,139 @@
+main {
+  background-color: #FFFFFF;
+  border: .5rem solid var(--color-border);
+  border-radius: 4rem;
+}
+
+section {
+  padding: 4rem 6rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & h1 {
+    font: 400 var(--title)/1.25 var(--ff-poppins);
+  }
+}
+
+form {
+  margin-top: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & .input-group {
+    margin-top: 1rem;
+    padding: .625rem .5rem;
+
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    border-bottom: 2px solid var(--color-text-field);
+
+    & input {
+      appearance: none;
+      border: none;
+      outline: none;
+
+      font: 600 var(--text-md)/1.25 var(--ff-montserrat);
+      color: var(--color-text-field);
+    }
+  }
+
+  & .btn-login {
+    margin-top: 1rem;
+    width: 80%;
+    cursor: pointer;
+    background-color: var(--bg-button);
+    color: #FFFFFF;
+    border: none;
+    font: 600 1.125rem/1.5 var(--ff-montserrat);
+    border-radius: 1rem;
+    padding: .25rem;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 1);
+    transition: 0.2s ease;
+
+    &:hover {
+      scale: 1.02;
+    }
+  }
+
+  & .links {
+    margin-top: 1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    font: 600 .875rem/1.25 var(--ff-montserrat);
+    color: var(--color-text-field);
+
+    & a {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+
+  & .social-login {
+    margin-top: .75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+
+    & div {
+      display: flex;
+      gap: 1rem;
+
+      & .google-btn {
+        padding: 1rem;
+        border-radius: 50%;
+        border: 1px solid #000000;
+        background-color: transparent;
+        cursor: pointer;
+        transition: 0.2s ease;
+
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          scale: 1.05;
+        }
+      }
+
+      & .apple-btn {
+        padding: 1rem;
+        border: none;
+        border-radius: 50%;
+        background-color: #000000;
+        transition: 0.2s ease;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          scale: 1.05;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 2rem 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: 2rem 1rem;
+  }
+
+  main {
+    border-radius: 2rem;
+  }
+}

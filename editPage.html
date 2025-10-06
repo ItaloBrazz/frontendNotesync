@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteSync - To do Page</title>
+
+    <link rel="stylesheet" href="styles/createPage/index.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <button class="logout">⏎</button>
+        <div class="title">NoteSync</div>
+    </header>
+
+
+    <main>
+        <form action="#" method="post">
+            <div class="input-group">
+                <img src="assets/icons/edit.svg" alt="Ícone de editar">
+                <input type="text" id="taskName" name="taskName" placeholder="Nome da task" required>
+            </div>
+
+            <button type="submit" class="btn-create">Editar Tarefa</button>
+        </form>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/tasks.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verificar se usuário está logado
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'loginPage.html';
+                return;
+            }
+
+            // Obter ID da tarefa da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const taskId = urlParams.get('id');
+            
+            if (!taskId) {
+                alert('ID da tarefa não fornecido');
+                setTimeout(() => {
+                    window.location.href = 'todoPage.html';
+                }, 2000);
+                return;
+            }
+
+            // Configurar botão de logout
+            const logoutBtn = document.querySelector('.logout');
+            logoutBtn.addEventListener('click', function() {
+                auth.logout();
+            });
+
+            // Carregar dados da tarefa
+            try {
+                const allTasks = await tasks.getTasks();
+                const task = allTasks.find(t => t.id == taskId);
+                
+                if (!task) {
+                    alert('Tarefa não encontrada');
+                    setTimeout(() => {
+                        window.location.href = 'todoPage.html';
+                    }, 2000);
+                    return;
+                }
+
+                // Preencher campo com o título atual
+                document.getElementById('taskName').value = task.title;
+                
+            } catch (error) {
+                alert('Erro ao carregar tarefa: ' + error.message);
+            }
+
+            // Configurar formulário de edição
+            const form = document.querySelector('form');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('taskName').value;
+                
+                try {
+                    await tasks.updateTask(taskId, { title });
+                    alert('Tarefa editada com sucesso!');
+                    
+                    // Redirecionar para página de tarefas após 1 segundo
+                    setTimeout(() => {
+                        window.location.href = 'todoPage.html';
+                    }, 1000);
+                    
+                } catch (error) {
+                    alert('Erro ao editar tarefa: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
