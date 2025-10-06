@@ -1,5 +1,7 @@
-// Configuração da API
-const API_BASE_URL = 'http://localhost:3000/api';
+// Configuração da API (usa o config.js)
+const API_BASE_URL = (window.API_CONFIG?.BASE_URL || 'https://backendnotesync.onrender.com') + '/api';
+
+console.log('✅ Tasks.js configurado para:', API_BASE_URL);
 
 // Função para fazer requisições HTTP com autenticação
 async function makeAuthenticatedRequest(url, options = {}) {
@@ -409,6 +411,14 @@ async function loadTasks() {
   }
 }
 
+// Função para editar tarefa (mantida para compatibilidade)
+function editTask(taskId) {
+  const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+  if (taskCard) {
+    toggleEditMode(taskCard, taskId);
+  }
+}
+
 // Função para mostrar mensagens de erro
 function showError(message) {
   alert('Erro: ' + message);
@@ -434,10 +444,10 @@ window.tasks = {
   saveTaskEdit,
   cancelTaskEdit,
   changeTaskStatus,
+  deleteTaskConfirm,
   showError,
   showSuccess
 };
 
 // Log para confirmar que o objeto foi exportado
 console.log('✅ Objeto tasks exportado com sucesso');
-
