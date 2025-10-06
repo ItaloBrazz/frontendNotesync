@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-Br">
+<html lang="pt-BR">
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,45 +17,45 @@
     <section>
       <h1>Register</h1>
 
-      <form action="#" method="post">
+      <form id="registerForm">
         <div class="input-group">
           <img src="assets/icons/user.svg" alt="Ícone de usuário">
           <input 
-          type="text"
-          id="nome"
-          name="nome"
-          placeholder="Nome de usuário"
-          required>
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Nome de usuário"
+            required>
         </div>
 
         <div class="input-group">
           <img src="assets/icons/mail.svg" alt="Ícone de email">
           <input 
-          type="email"
-          id="email"
-          name="email"
-          placeholder="E-mail"
-          required>
+            type="email"
+            id="email"
+            name="email"
+            placeholder="E-mail"
+            required>
         </div>
 
         <div class="input-group">
-          <img src="assets/icons/padlock.svg" alt="Ícone de usuário">
+          <img src="assets/icons/padlock.svg" alt="Ícone de senha">
           <input 
-          type="password"
-          id="senha"
-          name="senha"
-          placeholder="Senha"
-          required>
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Senha"
+            required>
         </div>
 
         <div class="input-group">
-          <img src="assets/icons/padlock.svg" alt="Ícone de usuário">
+          <img src="assets/icons/padlock.svg" alt="Ícone de confirmação">
           <input 
-          type="password"
-          id="confirm-senha"
-          name="confirm-senha"
-          placeholder="Confirme a senha"
-          required>
+            type="password"
+            id="confirmSenha"
+            name="confirmSenha"
+            placeholder="Confirme a senha"
+            required>
         </div>
 
         <button type="submit" class="btn-register">Register</button>
@@ -71,33 +71,64 @@
             </button>
           </div>
         </div>
+
+        <p style="text-align: center; margin-top: 20px;">
+          Já tem uma conta? <a href="loginPage.html" style="color: #007bff; text-decoration: none;">Faça login</a>
+        </p>
       </form>
     </section>
   </main>
 
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
+  <!-- Scripts carregados na ordem correta -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const form = document.querySelector('form');
+      console.log('📄 Página de registro carregada');
+      console.log('🔗 API URL:', window.auth?.API_BASE_URL);
+      
+      const form = document.getElementById('registerForm');
+      
+      if (!form) {
+        console.error('❌ Formulário não encontrado!');
+        return;
+      }
       
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('📝 Formulário submetido');
         
-        const nome = document.getElementById('nome').value;
-        const email = document.getElementById('email').value;
+        const nome = document.getElementById('nome').value.trim();
+        const email = document.getElementById('email').value.trim();
         const senha = document.getElementById('senha').value;
-        const confirmSenha = document.getElementById('confirm-senha').value;
+        const confirmSenha = document.getElementById('confirmSenha').value;
+        
+        console.log('👤 Dados do formulário:', { nome, email });
         
         try {
+          // Verificar se auth está disponível
+          if (!window.auth) {
+            throw new Error('Módulo de autenticação não carregado. Recarregue a página.');
+          }
+          
           // Validar dados
-          auth.validateEmail(email);
-          auth.validatePasswords(senha, confirmSenha);
+          console.log('✅ Validando email...');
+          window.auth.validateEmail(email);
+          
+          console.log('✅ Validando senhas...');
+          window.auth.validatePasswords(senha, confirmSenha);
+          
+          // Desabilitar botão durante o registro
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Registrando...';
           
           // Registrar usuário
-          await auth.registerUser({ nome, email, senha });
+          console.log('📡 Enviando dados para API...');
+          const response = await window.auth.registerUser({ nome, email, senha });
           
-          auth.showSuccess('Usuário registrado com sucesso!');
+          console.log('✅ Registro bem-sucedido:', response);
+          window.auth.showSuccess('Usuário registrado com sucesso!');
           
           // Redirecionar para página de tarefas após 2 segundos
           setTimeout(() => {
@@ -105,8 +136,23 @@
           }, 2000);
           
         } catch (error) {
-          auth.showError(error.message);
+          console.error('❌ Erro no registro:', error);
+          window.auth.showError(error.message || 'Erro ao registrar usuário');
+          
+          // Reabilitar botão em caso de erro
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Register';
         }
+      });
+      
+      // Adicionar listeners aos botões sociais (opcional)
+      document.querySelector('.google-btn')?.addEventListener('click', () => {
+        window.auth.showError('Login com Google ainda não implementado');
+      });
+      
+      document.querySelector('.apple-btn')?.addEventListener('click', () => {
+        window.auth.showError('Login com Apple ainda não implementado');
       });
     });
   </script>

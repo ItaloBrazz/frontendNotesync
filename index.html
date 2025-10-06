@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-Br">
+<html lang="pt-BR">
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,25 +17,25 @@
     <section>
       <h1>NoteSync</h1>
 
-      <form action="#" method="post">
+      <form id="loginForm">
         <div class="input-group">
           <img src="assets/icons/mail.svg" alt="Ícone de email">
           <input 
-          type="email"
-          id="email"
-          name="email"
-          placeholder="E-mail"
-          required>
+            type="email"
+            id="email"
+            name="email"
+            placeholder="E-mail"
+            required>
         </div>
 
         <div class="input-group">
-          <img src="assets/icons/padlock.svg" alt="Ícone de usuário">
+          <img src="assets/icons/padlock.svg" alt="Ícone de senha">
           <input 
-          type="password"
-          id="senha"
-          name="senha"
-          placeholder="Senha"
-          required>
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Senha"
+            required>
         </div>
 
         <div class="links">
@@ -60,23 +60,51 @@
     </section>
   </main>
 
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
+  <!-- Scripts carregados na ordem correta -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const form = document.querySelector('form');
+      console.log('📄 Página de login carregada');
+      console.log('🔗 API URL:', window.auth?.API_BASE_URL);
+      
+      const form = document.getElementById('loginForm');
+      
+      if (!form) {
+        console.error('❌ Formulário não encontrado!');
+        return;
+      }
       
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('🔐 Formulário de login submetido');
         
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const senha = document.getElementById('senha').value;
         
+        console.log('👤 Email:', email);
+        
         try {
-          // Fazer login
-          await auth.loginUser({ email, senha });
+          // Verificar se auth está disponível
+          if (!window.auth) {
+            throw new Error('Módulo de autenticação não carregado. Recarregue a página.');
+          }
           
-          auth.showSuccess('Login realizado com sucesso!');
+          // Validar email
+          console.log('✅ Validando email...');
+          window.auth.validateEmail(email);
+          
+          // Desabilitar botão durante o login
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Entrando...';
+          
+          // Fazer login
+          console.log('📡 Enviando credenciais para API...');
+          const response = await window.auth.loginUser({ email, senha });
+          
+          console.log('✅ Login bem-sucedido:', response);
+          window.auth.showSuccess('Login realizado com sucesso!');
           
           // Redirecionar para página de tarefas após 1 segundo
           setTimeout(() => {
@@ -84,8 +112,23 @@
           }, 1000);
           
         } catch (error) {
-          auth.showError(error.message);
+          console.error('❌ Erro no login:', error);
+          window.auth.showError(error.message || 'Erro ao fazer login');
+          
+          // Reabilitar botão em caso de erro
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Login';
         }
+      });
+      
+      // Adicionar listeners aos botões sociais (opcional)
+      document.querySelector('.google-btn')?.addEventListener('click', () => {
+        window.auth.showError('Login com Google ainda não implementado');
+      });
+      
+      document.querySelector('.apple-btn')?.addEventListener('click', () => {
+        window.auth.showError('Login com Apple ainda não implementado ainda');
       });
     });
   </script>
