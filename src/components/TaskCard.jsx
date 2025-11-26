@@ -32,43 +32,41 @@ const TaskCard = ({ task, onRename, onToggleStatus, onDelete }) => {
   };
 
   return (
-    <div className="task-card" data-task-id={task.id}>
-      <div className="card-header">
-        <div className={`status-indicator ${task.status}`}>
-          {task.status === 'todo' ? '📦 A fazer' : '✅ Feito'}
-        </div>
-        <div className="task-date">
+    <article className="task-card" data-task-id={task.id}>
+      <div className="task-top">
+        <span className={`task-pill ${task.status}`}>
+          {task.status === 'todo' ? 'A fazer' : 'Concluída'}
+        </span>
+        <span className="task-date">
           {new Date(task.createdAt || task.updatedAt || Date.now()).toLocaleDateString('pt-BR')}
-        </div>
+        </span>
       </div>
 
-      <div className="card-content">
-        {isEditing ? (
-          <input
-            className="task-input"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') handleSave();
-              if (event.key === 'Escape') {
-                setIsEditing(false);
-                setTitle(task.title);
-              }
-            }}
-            autoFocus
-            disabled={saving}
-          />
-        ) : (
-          <div className="task-title" onClick={() => setIsEditing(true)}>
-            {task.title}
-          </div>
-        )}
-      </div>
+      {isEditing ? (
+        <input
+          className="task-input"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') handleSave();
+            if (event.key === 'Escape') {
+              setIsEditing(false);
+              setTitle(task.title);
+            }
+          }}
+          autoFocus
+          disabled={saving}
+        />
+      ) : (
+        <p className="task-title" onClick={() => setIsEditing(true)}>
+          {task.title}
+        </p>
+      )}
 
-      <div className="card-actions">
+      <div className="task-actions">
         <button
           type="button"
-          className="action-btn edit-btn"
+          className="task-btn task-btn--edit"
           onClick={isEditing ? handleSave : () => setIsEditing(true)}
           disabled={saving}
         >
@@ -76,16 +74,20 @@ const TaskCard = ({ task, onRename, onToggleStatus, onDelete }) => {
         </button>
         <button
           type="button"
-          className="action-btn status-btn"
+          className="task-btn task-btn--status"
           onClick={onToggleStatus}
         >
           {task.status === 'todo' ? '✅' : '📦'}
         </button>
-        <button type="button" className="action-btn delete-btn" onClick={onDelete}>
+        <button
+          type="button"
+          className="task-btn task-btn--delete"
+          onClick={onDelete}
+        >
           🗑️
         </button>
       </div>
-    </div>
+    </article>
   );
 };
 

@@ -1,54 +1,80 @@
 import { useMemo } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 import { useTasks } from '../hooks/useTasks.js';
 import TaskCard from '../components/TaskCard.jsx';
-import '../../styles/todoPage/index.css';
+import ThemeToggle from '../components/ThemeToggle.jsx';
 
 const TodoPage = () => {
   const { logout } = useAuth();
   const { tasks, loading, error, rename, toggleStatus, remove } = useTasks();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const todoTasks = useMemo(() => tasks.filter((task) => task.status === 'todo'), [tasks]);
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
+
   return (
-    <div className="todo-page">
-      <header>
-        <button className="logout" onClick={logout}>⏎</button>
-        <div className="title">NoteSync</div>
+    <div className="tasks-shell">
+      <header className="tasks-header">
+        <div className="tasks-brand">
+          <span className="tasks-logo">NoteSync</span>
+          <span className="tasks-title">Tarefas a fazer</span>
+        </div>
+        <div className="tasks-header-actions">
+          <button className="tasks-logout" onClick={handleLogout} title="Sair">
+            ⎋
+          </button>
+          <ThemeToggle className="tasks-theme-toggle" />
+        </div>
       </header>
 
-      <main>
-        <div className="content">
-          <div className="title-left">A fazer</div>
-          {error && <div className="no-tasks-message">{error}</div>}
+      <main className="tasks-main">
+        <div className="tasks-content">
+          <h2 className="tasks-section-title">Lista de tarefas</h2>
+          {error && <div className="tasks-empty">{error}</div>}
           {loading ? (
-            <div className="no-tasks-message">Carregando tarefas...</div>
+            <div className="tasks-empty">Carregando tarefas...</div>
           ) : todoTasks.length === 0 ? (
-            <div className="no-tasks-message">Nenhuma tarefa a fazer</div>
+            <div className="tasks-empty">Nenhuma tarefa a fazer</div>
           ) : (
-            todoTasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onRename={(title) => rename(task.id, title)}
-                onToggleStatus={() => toggleStatus(task.id, 'done')}
-                onDelete={() => remove(task.id)}
-              />
-            ))
+            <div className="tasks-list">
+              {todoTasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onRename={(title) => rename(task.id, title)}
+                  onToggleStatus={() => toggleStatus(task.id, 'done')}
+                  onDelete={() => remove(task.id)}
+                />
+              ))}
+            </div>
           )}
         </div>
       </main>
 
-      <nav>
-        <div className="nav-inner">
-          <NavLink to="/tasks" className="nav-link">
+      <nav className="tasks-nav">
+        <div className="tasks-nav-inner">
+          <NavLink
+            to="/tasks"
+            className={`tasks-nav-link ${location.pathname === '/tasks' ? 'tasks-nav-link-active' : ''}`}
+          >
             📦 A fazer
           </NavLink>
-          <NavLink to="/tasks/create" className="nav-center">
+          <NavLink
+            to="/tasks/create"
+            className="tasks-nav-link tasks-nav-link--primary"
+          >
             ➕ Criar
           </NavLink>
-          <NavLink to="/tasks/done" className="nav-link">
+          <NavLink
+            to="/tasks/done"
+            className={`tasks-nav-link ${location.pathname === '/tasks/done' ? 'tasks-nav-link-active' : ''}`}
+          >
             ✔️ Feito
           </NavLink>
         </div>
