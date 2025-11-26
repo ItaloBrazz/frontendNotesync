@@ -5,7 +5,7 @@
     font-family: "Poppins", sans-serif;
 }
 
-body {
+.done-page {
     background-color: #0b0f18;
     color: #fff;
     display: flex;
@@ -13,7 +13,7 @@ body {
     min-height: 100vh;
 }
 
-header {
+.done-page header {
     width: 100%;
     background-color: #5b669a;
     display: flex;
@@ -44,22 +44,23 @@ header .title {
     color: #e1e6ff;
 }
 
-main {
+.done-page main {
     flex: 1;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 40px;
+    padding: 40px 16px 140px;
 }
 
-.content {
+.done-page .content {
     display: flex;
     flex-direction: column;
     gap: 16px;
     align-items: center;
 }
 
-.title-left {
+.done-page .title-left {
     align-self: flex-start;
     margin-left: 30px;
     margin-bottom: 6px;
@@ -360,7 +361,7 @@ main {
     }
 }
 
-nav {
+.done-page nav {
     background-color: #5b669a;
     padding: 14px 0;
     position: fixed;
@@ -368,15 +369,18 @@ nav {
     width: 100%;
 }
 
-.nav-inner {
+.done-page .nav-inner {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 180px;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 24px;
 }
 
-.nav-link,
-.nav-center {
+.done-page .nav-link,
+.done-page .nav-center {
     background-color: #d1d6f3;
     color: #000;
     text-decoration: none;
@@ -387,49 +391,50 @@ nav {
     transition: transform 0.2s;
 }
 
-.nav-link:hover,
-.nav-center:hover {
+.done-page .nav-link:hover,
+.done-page .nav-center:hover {
     transform: scale(1.08);
 }
 
-.nav-center {
+.done-page .nav-center {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 @media (max-width: 768px) {
-    .task {
+    .done-page .task {
         width: 90%;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
 
-    .task-actions {
+    .done-page .task-actions {
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
         gap: 10px;
     }
 
-    .title-left {
+    .done-page .title-left {
         margin-left: 24px;
     }
 
-    .nav-inner {
-        gap: 60px;
+    .done-page .nav-inner {
+        gap: 20px;
+        padding: 0 16px;
     }
 
-    .nav-link,
-    .nav-center {
+    .done-page .nav-link,
+    .done-page .nav-center {
         padding: 8px 18px;
         font-size: 0.9rem;
     }
 }
 
 @media (max-width: 480px) {
-    .task {
+    .done-page .task {
         width: 90%;
         flex-direction: row;
         justify-content: space-between;
@@ -437,26 +442,27 @@ nav {
         padding: 8px 12px;
     }
 
-    .task-actions {
+    .done-page .task-actions {
         flex-direction: row;
         gap: 8px;
         justify-content: flex-end;
     }
 
-    .title-left {
+    .done-page .title-left {
         margin-left: 18px;
     }
 
-    header .title {
+    .done-page header .title {
         font-size: 0.9rem;
     }
 
-    .nav-inner {
-        gap: 35px;
+    .done-page .nav-inner {
+        gap: 16px;
+        padding: 0 12px;
     }
 
-    .nav-link,
-    .nav-center {
+    .done-page .nav-link,
+    .done-page .nav-center {
         font-size: 0.8rem;
         padding: 6px 14px;
     }
