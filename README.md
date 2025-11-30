@@ -181,29 +181,6 @@ frontendNotesync/
 └── package.json
 ```
 
-## 🚀 Deploy
-
-### Deploy no Render (Static Site)
-
-1. No Render, crie um **Static Site**
-2. Conecte seu repositório do GitHub
-3. Configure:
-   - **Build Command**: `npm install && npm run build`
-   - **Publish Directory**: `dist`
-4. Adicione variáveis de ambiente:
-   - `VITE_AUTH_SERVICE_URL` = `https://notesync-auth-service.onrender.com`
-   - `VITE_TASKS_SERVICE_URL` = `https://notesync-tasks-service.onrender.com`
-
-### Deploy no Vercel/Netlify
-
-Similar ao Render:
-
-- **Build command**: `npm run build`
-- **Output directory**: `dist`
-- **Environment variables**:
-  - `VITE_AUTH_SERVICE_URL` = `https://notesync-auth-service.onrender.com`
-  - `VITE_TASKS_SERVICE_URL` = `https://notesync-tasks-service.onrender.com`
-
 ## 🐛 Troubleshooting
 
 ### Erro: "Cannot find module"
