@@ -39,7 +39,13 @@ export const useTasks = () => {
   };
 
   const toggleStatus = async (taskId, newStatus) => {
-    await tasksApi.updateTask(token, taskId, { status: newStatus });
+    // Tenta usar o endpoint específico de status, se não funcionar usa o updateTask
+    try {
+      await tasksApi.updateTaskStatus(token, taskId, newStatus);
+    } catch (err) {
+      // Fallback para updateTask se o endpoint de status não existir
+      await tasksApi.updateTask(token, taskId, { status: newStatus });
+    }
     await loadTasks();
   };
 

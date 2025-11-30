@@ -1,11 +1,16 @@
-import { request } from './http.js';
+import { request, AUTH_BASE } from './http.js';
 
-export const login = (credentials) => request('/auth/login', {
+// Path para autenticação - os serviços já têm /api/auth configurado
+const AUTH_PATH = '/api/auth';
+
+export const login = (credentials) => request(`${AUTH_PATH}/login`, {
   method: 'POST',
-  body: credentials
+  body: credentials,
+  baseUrl: AUTH_BASE
 });
 
-export const register = (payload) => request('/auth/register', {
+export const register = (payload) => request(`${AUTH_PATH}/register`, {
   method: 'POST',
-  body: payload
+  body: payload,
+  baseUrl: AUTH_BASE
 });
