@@ -32,14 +32,14 @@ jobs:
       - name: Upload dos artefatos
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-build-${{ github.sha }}
+          name: frontend-build
           path: dist
           retention-days: 5
 
   deploy:
     runs-on: ubuntu-latest
     needs: test_and_build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: homolog
 
@@ -47,10 +47,20 @@ jobs:
       contents: write
 
     steps:
-      - name: Baixar artefato gerado
-        uses: actions/download-artifact@v4
+      - name: Checkout novamente para deploy
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
         with:
-          name: frontend-build-${{ github.sha }}
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build novamente para deploy
+        run: npm run build
 
       - name: Deploy no GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
