@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
-import '../../styles/registerPage/index.css';
 
 const RegisterPage = () => {
   const { register, loading, isAuthenticated } = useAuth();
@@ -46,87 +45,94 @@ const RegisterPage = () => {
   };
 
   return (
-    <main>
-      <section>
-        <h1>Register</h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Criar conta</h1>
+        <p className="auth-subtitle">Cadastre-se para organizar e sincronizar suas tarefas.</p>
 
-        <form id="registerForm" onSubmit={handleSubmit}>
-          {error && <div style={errorStyles}>{error}</div>}
-
-          <div className="input-group">
-            <img src="/assets/icons/user.svg" alt="Ícone de usuário" />
-            <input
-              type="text"
-              id="nome"
-              name="nome"
-              placeholder="Nome de usuário"
-              value={form.nome}
-              onChange={handleChange}
-              required
-            />
+        {error && (
+          <div style={errorStyles} className="feedback-banner feedback-danger">
+            {error}
           </div>
+        )}
 
-          <div className="input-group">
-            <img src="/assets/icons/mail.svg" alt="Ícone de email" />
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="E-mail"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <img src="/assets/icons/padlock.svg" alt="Ícone de senha" />
-            <input
-              type="password"
-              id="senha"
-              name="senha"
-              placeholder="Senha"
-              value={form.senha}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <img src="/assets/icons/padlock.svg" alt="Ícone de confirmação" />
-            <input
-              type="password"
-              id="confirmacao"
-              name="confirmacao"
-              placeholder="Confirme a senha"
-              value={form.confirmacao}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn-register" disabled={loading}>
-            {loading ? 'Registrando...' : 'Register'}
-          </button>
-
-          <div className="social-login">
-            <p>ou</p>
-            <div>
-              <button type="button" className="google-btn" onClick={() => setError('Login com Google ainda não está disponível')}>
-                <img src="/assets/icons/google_logo.svg" alt="Google" />
-              </button>
-              <button type="button" className="apple-btn" onClick={() => setError('Login com Apple ainda não está disponível')}>
-                <img src="/assets/icons/apple_logo.svg" alt="Apple" />
-              </button>
+        <form id="registerForm" className="auth-form" onSubmit={handleSubmit}>
+          <div className="input-row">
+            <span className="input-label-text">Nome</span>
+            <div className="input-group">
+              <img src="/assets/icons/user.svg" alt="Ícone de usuário" />
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="Seu nome"
+                value={form.nome}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
-          <p className="switch-link">
+          <div className="input-row">
+            <span className="input-label-text">Email</span>
+            <div className="input-group">
+              <img src="/assets/icons/mail.svg" alt="Ícone de email" />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="seu@email.com"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="input-row">
+            <span className="input-label-text">Senha</span>
+            <div className="input-group">
+              <img src="/assets/icons/padlock.svg" alt="Ícone de senha" />
+              <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Mínimo 6 caracteres"
+                value={form.senha}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="input-row">
+            <span className="input-label-text">Confirmar senha</span>
+            <div className="input-group">
+              <img src="/assets/icons/padlock.svg" alt="Ícone de confirmação" />
+              <input
+                type="password"
+                id="confirmacao"
+                name="confirmacao"
+                placeholder="Repita a senha"
+                value={form.confirmacao}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" className="primary-btn" disabled={loading}>
+            {loading ? 'Registrando...' : 'Cadastrar'}
+          </button>
+        </form>
+
+        <div className="auth-links">
+          <p>
             Já tem uma conta? <Link to="/login">Faça login</Link>
           </p>
-        </form>
-      </section>
-    </main>
+        </div>
+      </div>
+    </div>
   );
 };
 
