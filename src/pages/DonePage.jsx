@@ -47,7 +47,7 @@ const DonePage = () => {
                 <TaskCard
                   key={task.id}
                   task={task}
-                  onRename={(title) => rename(task.id, title)}
+                  onRename={(title, description) => rename(task.id, title, description)}
                   onToggleStatus={() => toggleStatus(task.id, 'todo')}
                   onDelete={() => remove(task.id)}
                 />

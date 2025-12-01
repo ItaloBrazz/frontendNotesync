@@ -150,10 +150,21 @@ input {
   border-radius: 14px;
   border: 1px solid var(--border-subtle);
   background: rgba(15, 23, 42, 0.75);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.input-group:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  background: rgba(15, 23, 42, 0.85);
 }
 
 :root[data-theme='light'] .input-group {
   background: #f9fafb;
+}
+
+:root[data-theme='light'] .input-group:focus-within {
+  background: #ffffff;
 }
 
 .input-group img {
@@ -161,13 +172,71 @@ input {
   opacity: 0.85;
 }
 
-.input-group input {
+.input-group input,
+.input-group textarea {
   flex: 1;
   border: none;
   outline: none;
   background: transparent;
   color: var(--text-primary);
   font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.input-group textarea {
+  min-height: 100px;
+  resize: vertical;
+  padding: 0.5rem 0;
+  line-height: 1.6;
+  overflow-y: auto;
+  transition: color 0.2s ease;
+}
+
+.input-group textarea:focus {
+  outline: none;
+}
+
+.input-group textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.input-group textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.input-group textarea::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
+.input-group textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+.input-group textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.input-group input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Input group com textarea - ajustar alinhamento do ícone */
+.input-group--textarea {
+  align-items: flex-start;
+  padding-top: 0.85rem;
+}
+
+.input-group--textarea img {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.input-group--textarea textarea {
+  min-height: 100px;
+  max-height: 200px;
 }
 
 .primary-btn {

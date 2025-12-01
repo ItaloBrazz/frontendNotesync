@@ -22,7 +22,6 @@ node_modules/
 dist/
 dist-ssr/
 build/
-.vite/
 *.local
 
 # ============================================
@@ -146,17 +145,12 @@ ui-debug.log
 .firebaserc.local
 
 # ============================================
-# Vite específico
+# Vite HMR e Dev Server
 # ============================================
 .vite/
 vite.config.*.timestamp-*
 vite.config.*.temp.*
-
-# ============================================
-# Build temporário
-# ============================================
-.cache/
-.parcel-cache/
+vite.temp.*
 
 # ============================================
 # Docker
@@ -169,3 +163,18 @@ vite.config.*.temp.*
 .deploy/
 deploy.log
 .vercel/
+.netlify/
+
+# ============================================
+# Arquivos Temporários de Build
+# ============================================
+*.build.log
+build.log
+build-info.json
+
+# ============================================
+# Documentação de Deploy (opcional - manter ou ignorar)
+# ============================================
+# Se quiser ignorar guias de deploy temporários, descomente:
+# DEPLOY-*.md
+# !README.md

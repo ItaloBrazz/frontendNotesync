@@ -11,7 +11,11 @@ export const fetchTasks = (token) => request(TASKS_PATH, {
 export const createTask = (token, task) => request(TASKS_PATH, {
   method: 'POST',
   token,
-  body: { title: task.title, status: task.status || 'todo' },
+  body: { 
+    title: task.title, 
+    description: task.description || null,
+    status: task.status || 'todo' 
+  },
   baseUrl: TASKS_BASE
 });
 

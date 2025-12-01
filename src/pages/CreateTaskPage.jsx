@@ -6,6 +6,7 @@ const CreateTaskPage = () => {
   const { create } = useTasks();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -22,9 +23,10 @@ const CreateTaskPage = () => {
 
     setSubmitting(true);
     try {
-      await create(title);
+      await create(title, description.trim() || null);
       setMessage('Tarefa criada com sucesso!');
       setTitle('');
+      setDescription('');
       setTimeout(() => navigate('/tasks'), 800);
     } catch (err) {
       setError(err.message);
@@ -64,6 +66,21 @@ const CreateTaskPage = () => {
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   required
+                />
+              </div>
+            </div>
+
+            <div className="input-row">
+              <span className="input-label-text">Descrição</span>
+              <div className="input-group input-group--textarea">
+                <img src="/assets/icons/edit.svg" alt="Ícone de edição" />
+                <textarea
+                  id="taskDescription"
+                  name="taskDescription"
+                  placeholder="Ex: Revisar o relatório semanal da equipe de vendas, verificar métricas e preparar apresentação para reunião."
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  rows="4"
                 />
               </div>
             </div>

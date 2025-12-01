@@ -47,7 +47,7 @@ const TodoPage = () => {
                 <TaskCard
                   key={task.id}
                   task={task}
-                  onRename={(title) => rename(task.id, title)}
+                  onRename={(title, description) => rename(task.id, title, description)}
                   onToggleStatus={() => toggleStatus(task.id, 'done')}
                   onDelete={() => remove(task.id)}
                 />

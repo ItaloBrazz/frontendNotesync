@@ -26,15 +26,32 @@ export const useTasks = () => {
     loadTasks();
   }, [loadTasks]);
 
-  const create = async (title) => {
+  const create = async (title, description = null) => {
     const trimmed = title.trim();
     if (!trimmed) throw new Error('Informe um título para a tarefa');
-    await tasksApi.createTask(token, { title: trimmed });
+    
+    // Tratamento correto da descrição: preserva strings vazias e null
+    let descriptionValue = null;
+    if (description !== null && description !== undefined) {
+      const trimmedDesc = String(description).trim();
+      descriptionValue = trimmedDesc === '' ? null : trimmedDesc;
+    }
+    
+    console.log('[useTasks.create] Enviando:', { title: trimmed, description: descriptionValue });
+    
+    await tasksApi.createTask(token, { 
+      title: trimmed, 
+      description: descriptionValue 
+    });
     await loadTasks();
   };
 
-  const rename = async (taskId, newTitle) => {
-    await tasksApi.updateTask(token, taskId, { title: newTitle });
+  const rename = async (taskId, newTitle, newDescription = null) => {
+    const updateData = { title: newTitle };
+    if (newDescription !== undefined) {
+      updateData.description = newDescription;
+    }
+    await tasksApi.updateTask(token, taskId, updateData);
     await loadTasks();
   };
 
