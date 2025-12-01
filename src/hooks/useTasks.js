@@ -26,7 +26,7 @@ export const useTasks = () => {
     loadTasks();
   }, [loadTasks]);
 
-  const create = async (title, description = null) => {
+  const create = async (title, description = null, deadline = null) => {
     const trimmed = title.trim();
     if (!trimmed) throw new Error('Informe um título para a tarefa');
     
@@ -37,19 +37,32 @@ export const useTasks = () => {
       descriptionValue = trimmedDesc === '' ? null : trimmedDesc;
     }
     
-    console.log('[useTasks.create] Enviando:', { title: trimmed, description: descriptionValue });
+    // Tratamento do deadline: aceita ISO string ou null
+    // A conversão para ISO string já é feita no CreateTaskPage
+    let deadlineValue = null;
+    if (deadline !== null && deadline !== undefined && deadline !== '') {
+      deadlineValue = deadline; // Já vem como ISO string do CreateTaskPage
+    }
+    
+    console.log('[useTasks.create] Enviando:', { title: trimmed, description: descriptionValue, deadline: deadlineValue });
     
     await tasksApi.createTask(token, { 
       title: trimmed, 
-      description: descriptionValue 
+      description: descriptionValue,
+      deadline: deadlineValue
     });
     await loadTasks();
   };
 
-  const rename = async (taskId, newTitle, newDescription = null) => {
+  const rename = async (taskId, newTitle, newDescription = null, newDeadline = null) => {
     const updateData = { title: newTitle };
     if (newDescription !== undefined) {
       updateData.description = newDescription;
+    }
+    if (newDeadline !== undefined) {
+      // Se newDeadline já for uma ISO string completa, usar diretamente
+      // Caso contrário, já foi convertido no TaskCard
+      updateData.deadline = newDeadline;
     }
     await tasksApi.updateTask(token, taskId, updateData);
     await loadTasks();

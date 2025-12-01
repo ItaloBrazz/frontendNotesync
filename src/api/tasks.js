@@ -14,6 +14,7 @@ export const createTask = (token, task) => request(TASKS_PATH, {
   body: { 
     title: task.title, 
     description: task.description || null,
+    deadline: task.deadline || null,
     status: task.status || 'todo' 
   },
   baseUrl: TASKS_BASE

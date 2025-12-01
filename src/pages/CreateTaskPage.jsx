@@ -7,9 +7,19 @@ const CreateTaskPage = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Obter data mínima (hoje) no formato YYYY-MM-DD
+  const getMinDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,12 +31,34 @@ const CreateTaskPage = () => {
       return;
     }
 
+    // Validar data se fornecida
+    if (deadline) {
+      const selectedDate = new Date(deadline);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        setError('Não é possível definir uma data que já passou');
+        return;
+      }
+    }
+
     setSubmitting(true);
     try {
-      await create(title, description.trim() || null);
+      // Converter data para datetime completo (fim do dia: 23:59:59)
+      let deadlineValue = null;
+      if (deadline) {
+        const date = new Date(deadline);
+        date.setHours(23, 59, 59, 999);
+        deadlineValue = date.toISOString();
+      }
+      
+      await create(title, description.trim() || null, deadlineValue);
       setMessage('Tarefa criada com sucesso!');
       setTitle('');
       setDescription('');
+      setDeadline('');
       setTimeout(() => navigate('/tasks'), 800);
     } catch (err) {
       setError(err.message);
@@ -81,6 +113,21 @@ const CreateTaskPage = () => {
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                   rows="4"
+                />
+              </div>
+            </div>
+
+            <div className="input-row">
+              <span className="input-label-text">Prazo (Opcional)</span>
+              <div className="input-group">
+                <img src="/assets/icons/list.svg" alt="Ícone de calendário" />
+                <input
+                  type="date"
+                  id="taskDeadline"
+                  name="taskDeadline"
+                  value={deadline}
+                  onChange={(event) => setDeadline(event.target.value)}
+                  min={getMinDate()}
                 />
               </div>
             </div>

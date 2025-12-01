@@ -6,7 +6,7 @@ import TaskCard from '../components/TaskCard.jsx';
 import ThemeToggle from '../components/ThemeToggle.jsx';
 
 const DonePage = () => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { tasks, loading, error, rename, toggleStatus, remove } = useTasks();
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,6 +35,11 @@ const DonePage = () => {
 
       <main className="tasks-main">
         <div className="tasks-content">
+          {user && user.nome && (
+            <div className="welcome-message">
+              <span className="welcome-text">Bem-vindo, <strong>{user.nome}</strong>!</span>
+            </div>
+          )}
           <h2 className="tasks-section-title">Histórico de tarefas</h2>
           {error && <div className="tasks-empty">{error}</div>}
           {loading ? (
@@ -47,7 +52,7 @@ const DonePage = () => {
                 <TaskCard
                   key={task.id}
                   task={task}
-                  onRename={(title, description) => rename(task.id, title, description)}
+                  onRename={(title, description, deadline) => rename(task.id, title, description, deadline)}
                   onToggleStatus={() => toggleStatus(task.id, 'todo')}
                   onDelete={() => remove(task.id)}
                 />
