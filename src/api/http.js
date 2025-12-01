@@ -37,31 +37,46 @@ const buildHeaders = (token) => {
   return headers;
 };
 
-export async function request(path, { method = 'GET', body, token, baseUrl } = {}) {
+export async function request(path, { method = 'GET', body, token, baseUrl, timeout = 10000 } = {}) {
   // Se baseUrl for fornecida, usa diretamente; caso contrário, usa API_ROOT
   const url = baseUrl 
     ? `${baseUrl}${path.startsWith('/') ? path : '/' + path}`
     : `${API_ROOT}${path}`;
   
-  const response = await fetch(url, {
-    method,
-    headers: buildHeaders(token),
-    body: body ? JSON.stringify(body) : undefined
-  });
+  // Criar AbortController para timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  let data = null;
   try {
-    data = await response.json();
-  } catch (_) {
-    data = null;
-  }
+    const response = await fetch(url, {
+      method,
+      headers: buildHeaders(token),
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal
+    });
 
-  if (!response.ok) {
-    const message = data?.error || data?.message || 'Erro ao comunicar com o servidor';
-    throw new Error(message);
-  }
+    clearTimeout(timeoutId);
 
-  return data;
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (_) {
+      data = null;
+    }
+
+    if (!response.ok) {
+      const message = data?.error || data?.message || 'Erro ao comunicar com o servidor';
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error('Tempo de espera esgotado. Tente novamente.');
+    }
+    throw error;
+  }
 }
 
 export { API_ROOT, AUTH_BASE, TASKS_BASE };

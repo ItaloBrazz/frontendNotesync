@@ -31,13 +31,36 @@ const RegisterPage = () => {
     event.preventDefault();
     setError('');
 
+    // Validações no frontend (evita requisições desnecessárias)
+    if (!form.nome.trim()) {
+      setError('Nome é obrigatório');
+      return;
+    }
+
+    if (!form.email.trim()) {
+      setError('Email é obrigatório');
+      return;
+    }
+
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError('Email inválido');
+      return;
+    }
+
+    if (form.senha.length < 6) {
+      setError('Senha deve ter no mínimo 6 caracteres');
+      return;
+    }
+
     if (form.senha !== form.confirmacao) {
       setError('As senhas não coincidem');
       return;
     }
 
     try {
-      await register({ nome: form.nome, email: form.email, senha: form.senha });
+      await register({ nome: form.nome.trim(), email: form.email.trim().toLowerCase(), senha: form.senha });
       navigate('/tasks');
     } catch (err) {
       setError(err.message);
