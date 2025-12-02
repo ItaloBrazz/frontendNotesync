@@ -123,9 +123,49 @@ frontendNotesync/
 ```bash
 npm run dev              # Desenvolvimento
 npm run build            # Build produção
-npm test                 # Testes
+npm test                 # Testes unitários
 npm run test:watch       # Testes em watch mode
+npm run monitor          # Monitoramento de serviços
+npm run load:light       # Teste de carga leve (10 req/s)
+npm run load:growing     # Teste de carga crescente (50 req/s)
+npm run load:popular     # Teste de carga popular (100 req/s)
+npm run load:viral       # Teste de carga viral (1000 req/s)
+npm run load:all         # Executar todos os testes de carga
 ```
+
+## Monitoramento e Observabilidade
+
+### Health Check
+
+Monitora a saúde dos serviços backend:
+
+```bash
+npm run monitor
+```
+
+Verifica:
+- Status dos endpoints `/health`
+- Tempo de resposta de cada serviço
+- Alertas para serviços offline
+
+### Testes de Carga
+
+4 cenários de teste implementados com K6:
+
+1. **Leve**: 10 requisições/segundo (uso normal)
+2. **Crescente**: 50 requisições/segundo (crescimento)
+3. **Popular**: 100 requisições/segundo (app popular)
+4. **Viral**: 1000 requisições/segundo (pico extremo)
+
+**Documentação completa:** Ver `monitoring/README.md`
+
+### Métricas Coletadas
+
+- Tempo médio de resposta
+- Taxa de sucesso/falha
+- Latência p(95) e p(99)
+- Throughput (requisições/segundo)
+- Alertas automáticos para degradação
 
 ## Troubleshooting
 

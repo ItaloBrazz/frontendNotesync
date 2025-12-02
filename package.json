@@ -9,7 +9,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "deploy:firebase": "npm run build && firebase deploy --only hosting"
+    "deploy:firebase": "npm run build && firebase deploy --only hosting",
+    "monitor": "node scripts/health-check.js",
+    "load:light": "node -e \"require('child_process').execSync('\\\"C:\\\\Program Files\\\\k6\\\\k6.exe\\\" run tests/load/light-load.js', {stdio: 'inherit'})\"",
+    "load:growing": "node -e \"require('child_process').execSync('\\\"C:\\\\Program Files\\\\k6\\\\k6.exe\\\" run tests/load/growing-load.js', {stdio: 'inherit'})\"",
+    "load:popular": "node -e \"require('child_process').execSync('\\\"C:\\\\Program Files\\\\k6\\\\k6.exe\\\" run tests/load/popular-load.js', {stdio: 'inherit'})\"",
+    "load:viral": "node -e \"require('child_process').execSync('\\\"C:\\\\Program Files\\\\k6\\\\k6.exe\\\" run tests/load/viral-load.js', {stdio: 'inherit'})\"",
+    "load:all": "npm run load:light && npm run load:growing && npm run load:popular && npm run load:viral"
   },
   "repository": {
     "type": "git",

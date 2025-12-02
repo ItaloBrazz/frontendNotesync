@@ -138,7 +138,7 @@ const TaskCard = ({ task, onRename, onToggleStatus, onDelete }) => {
                        deadlineInfo.status === 'soon' ? `Vence em ${deadlineInfo.days} dias` :
                        'Prazo'}
               >
-                <span className="task-deadline-icon">📅</span>
+                <span className="task-deadline-icon">Data</span>
                 <span className="task-deadline-date">{deadlineInfo.text}</span>
                 {deadlineInfo.status === 'overdue' && (
                   <span className="task-deadline-label">Atrasado</span>
@@ -221,7 +221,7 @@ const TaskCard = ({ task, onRename, onToggleStatus, onDelete }) => {
           disabled={saving}
           title={isEditing ? 'Salvar (Ctrl+Enter)' : 'Editar'}
         >
-          {isEditing ? '💾' : '✏️'}
+          {isEditing ? 'Salvar' : 'Editar'}
         </button>
         {isEditing && (
           <button
@@ -231,7 +231,7 @@ const TaskCard = ({ task, onRename, onToggleStatus, onDelete }) => {
             disabled={saving}
             title="Cancelar (Esc)"
           >
-            ❌
+            Cancelar
           </button>
         )}
         <button
@@ -239,14 +239,14 @@ const TaskCard = ({ task, onRename, onToggleStatus, onDelete }) => {
           className="task-btn task-btn--status"
           onClick={onToggleStatus}
         >
-          {task.status === 'todo' ? '✅' : '📦'}
+          {task.status === 'todo' ? 'Concluir' : 'Reabrir'}
         </button>
         <button
           type="button"
           className="task-btn task-btn--delete"
           onClick={onDelete}
         >
-          🗑️
+          Excluir
         </button>
       </div>
     </article>
