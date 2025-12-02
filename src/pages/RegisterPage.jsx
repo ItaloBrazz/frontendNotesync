@@ -83,7 +83,7 @@ const RegisterPage = () => {
           <div className="input-row">
             <span className="input-label-text">Nome</span>
             <div className="input-group">
-              <img src="/assets/icons/user.svg" alt="Ícone de usuário" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/user.svg`} alt="Ícone de usuário" />
               <input
                 type="text"
                 id="nome"
@@ -99,7 +99,7 @@ const RegisterPage = () => {
           <div className="input-row">
             <span className="input-label-text">Email</span>
             <div className="input-group">
-              <img src="/assets/icons/mail.svg" alt="Ícone de email" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/mail.svg`} alt="Ícone de email" />
               <input
                 type="email"
                 id="email"
@@ -115,7 +115,7 @@ const RegisterPage = () => {
           <div className="input-row">
             <span className="input-label-text">Senha</span>
             <div className="input-group">
-              <img src="/assets/icons/padlock.svg" alt="Ícone de senha" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/padlock.svg`} alt="Ícone de senha" />
               <input
                 type="password"
                 id="senha"
@@ -131,7 +131,7 @@ const RegisterPage = () => {
           <div className="input-row">
             <span className="input-label-text">Confirmar senha</span>
             <div className="input-group">
-              <img src="/assets/icons/padlock.svg" alt="Ícone de confirmação" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/padlock.svg`} alt="Ícone de confirmação" />
               <input
                 type="password"
                 id="confirmacao"

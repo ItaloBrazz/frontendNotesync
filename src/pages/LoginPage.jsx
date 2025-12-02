@@ -50,7 +50,7 @@ const LoginPage = () => {
           <div className="input-row">
             <span className="input-label-text">Email</span>
             <div className="input-group">
-              <img src="/assets/icons/mail.svg" alt="Ícone de email" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/mail.svg`} alt="Ícone de email" />
               <input
                 type="email"
                 id="email"
@@ -66,7 +66,7 @@ const LoginPage = () => {
           <div className="input-row">
             <span className="input-label-text">Senha</span>
             <div className="input-group">
-              <img src="/assets/icons/padlock.svg" alt="Ícone de senha" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/padlock.svg`} alt="Ícone de senha" />
               <input
                 type="password"
                 id="senha"
@@ -98,14 +98,14 @@ const LoginPage = () => {
               className="social-btn google-btn"
               onClick={() => setError('Login com Google ainda não está disponível')}
             >
-              <img src="/assets/icons/google_logo.svg" alt="Google" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/google_logo.svg`} alt="Google" />
             </button>
             <button
               type="button"
               className="social-btn apple-btn"
               onClick={() => setError('Login com Apple ainda não está disponível')}
             >
-              <img src="/assets/icons/apple_logo.svg" alt="Apple" />
+              <img src={`${import.meta.env.BASE_URL}assets/icons/apple_logo.svg`} alt="Apple" />
             </button>
           </div>
         </div>

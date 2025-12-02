@@ -89,7 +89,7 @@ const CreateTaskPage = () => {
             <div className="input-row">
               <span className="input-label-text">Título</span>
               <div className="input-group">
-                <img src="/assets/icons/list.svg" alt="Ícone de lista" />
+                <img src={`${import.meta.env.BASE_URL}assets/icons/list.svg`} alt="Ícone de lista" />
                 <input
                   type="text"
                   id="taskName"
@@ -105,7 +105,7 @@ const CreateTaskPage = () => {
             <div className="input-row">
               <span className="input-label-text">Descrição</span>
               <div className="input-group input-group--textarea">
-                <img src="/assets/icons/edit.svg" alt="Ícone de edição" />
+                <img src={`${import.meta.env.BASE_URL}assets/icons/edit.svg`} alt="Ícone de edição" />
                 <textarea
                   id="taskDescription"
                   name="taskDescription"
@@ -120,7 +120,7 @@ const CreateTaskPage = () => {
             <div className="input-row">
               <span className="input-label-text">Prazo (Opcional)</span>
               <div className="input-group">
-                <img src="/assets/icons/list.svg" alt="Ícone de calendário" />
+                <img src={`${import.meta.env.BASE_URL}assets/icons/list.svg`} alt="Ícone de calendário" />
                 <input
                   type="date"
                   id="taskDeadline"
