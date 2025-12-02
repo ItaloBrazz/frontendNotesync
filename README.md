@@ -1,6 +1,6 @@
 # NoteSync Frontend
 
-[![CI/CD](https://github.com/ItaloBrazz/frontendNotesync/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/ItaloBrazz/frontendNotesync/actions/workflows/ci-cd.yml)
+[![CI/CD](https://github.com/ItaloBrazz/frontendNotesync/actions/workflows/ci-cd.yml/badge.svg)]
 
 Frontend do NoteSync desenvolvido em React + Vite, conectado aos serviços backend.
 
